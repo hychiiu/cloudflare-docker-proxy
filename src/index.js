@@ -1,3 +1,5 @@
+import homePage from './index.html'
+
 addEventListener("fetch", (event) => {
   event.passThroughOnException();
   event.respondWith(handleRequest(event.request));
@@ -24,7 +26,7 @@ function routeByHosts(host) {
   if (host in routes) {
     return routes[host];
   }
-  if (MODE == "debug") {
+  if (MODE === "debug") {
     return TARGET_UPSTREAM;
   }
   return "";
@@ -42,6 +44,15 @@ async function handleRequest(request) {
         status: 404,
       }
     );
+  }
+  // return docs
+  if (url.pathname === "/") {
+    return new Response(homePage, {
+      status: 200,
+      headers: {
+        "content-type": "text/html"
+      }
+    });
   }
   const isDockerHub = upstream == dockerHub;
   const authorization = request.headers.get("Authorization");
